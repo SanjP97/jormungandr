@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/banner.jpg" alt="Jörmungandr — LLM Robustness Evaluation" width="100%">
+</p>
+
 # Jörmungandr
 
 **An LLM security benchmarking framework for red-teaming chatbots and LLM APIs.**
