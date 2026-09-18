@@ -1,0 +1,111 @@
+# Template for testing a Uniphore RAG question-answering endpoint.
+# Copy to config/uniphore.local.yml and fill in the placeholders.
+
+# Application Configuration
+app_name: "Uniphore LLM RAG API"
+base_url: "https://YOUR_UNIPHORE_API_HOST"
+
+# Authentication
+auth:
+  type: "bearer"
+  credentials:
+    token: "YOUR_BEARER_TOKEN"
+
+# API Endpoint Configuration
+endpoint:
+  path: "/llm-inference/v1/answer-question-with-rag"
+  method: "POST"
+  
+  # Request format with custom headers
+  request:
+    type: "json"
+    body_template:
+      query: "{prompt}"
+      kb_id: "YOUR_KNOWLEDGE_BASE_ID"
+    
+    # Extra headers (e.g. copied from a captured browser request)
+    headers:
+      Content-Type: "application/json"
+      Accept: "*/*"
+      Accept-Language: "en-US,en;q=0.9"
+      Origin: "https://YOUR_APP_ORIGIN"
+      Referer: "https://YOUR_APP_ORIGIN/"
+      User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+  
+  # Response parsing
+  response:
+    output_path: "response"
+
+# Rate Limiting
+rate_limiting:
+  requests_per_minute: 1
+  concurrent_requests: 1
+  
+  retry:
+    max_retries: 3
+    backoff_factor: 2
+    retry_on_status: [429, 500, 502, 503, 504]
+  
+  timeout:
+    connect_timeout: 10
+    read_timeout: 30
+    total_timeout: 60
+
+# Response Handling
+response_handling:
+  adaptive_timeout:
+    enabled: true
+    percentile: 95
+    multiplier: 1.5
+    min_samples: 10
+
+# Dataset Configuration
+dataset:
+  dataset_id: "giskardai/phare"
+  split: "public"
+  languages: ["en"]
+  
+  categories:
+    - "harmful_content"
+    - "jailbreak"
+    - "hallucination"
+    - "bias_and_stereotypes"
+  
+  sampling:
+    enabled: true
+    samples_per_category: 3
+
+# Evaluation Configuration
+# Supported providers: "perplexity", "google", "openrouter", or "ollama"
+# For Perplexity: provider: "perplexity", model: "sonar", api_key: "YOUR_API_KEY"
+# For Google AI Studio: provider: "google", model: "gemini-2.0-flash", api_key: "YOUR_API_KEY"
+# For OpenRouter: provider: "openrouter", model: "nvidia/nemotron-3-nano-30b-a3b:free", api_key: "YOUR_API_KEY"
+# For Ollama (local): provider: "ollama", model: "llama3" (no api_key needed, default: localhost:11434)
+# For Ollama (cloud): provider: "ollama", model: "llama3", base_url: "https://your-cloud-host.com", api_key: "YOUR_API_KEY"
+evaluation:
+  method: "llm_judge"
+  judge:
+    provider: "openrouter"
+    api_key: "YOUR_API_KEY"
+    model: "nvidia/nemotron-3-nano-30b-a3b:free"
+    timeout: 30
+    request_delay: 10    # seconds between judge requests
+
+# Mock Mode Configuration (used with --mock flag)
+# Uses a free LLM as the simulated target so you can test the pipeline
+# Providers: "groq" (recommended, ~30 RPM), "google" (~15 RPM), "openrouter" (strict)
+mock:
+  provider: "openrouter"
+  model: "nvidia/nemotron-3-nano-30b-a3b:free"
+  api_key: "YOUR_API_KEY"
+  request_delay: 10     # seconds between mock target requests
+  timeout: 60
+  system_prompt: "You are a helpful AI assistant. Respond naturally to the user's message."
+
+# Output Configuration
+output:
+  base_dir: "results"
+  formats:
+    - "json"
+    - "csv"
+    - "html"

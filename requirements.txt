@@ -1,0 +1,18 @@
+# Core dependencies — kept in sync with pyproject.toml
+requests>=2.31.0
+aiohttp>=3.9.0
+jsonpath-ng>=1.6.0
+pyyaml>=6.0.1
+datasets>=2.14.0
+pandas>=2.0.0
+numpy>=1.24.0
+rich>=13.5.0
+tqdm>=4.66.0
+python-dotenv>=1.0.0
+tenacity>=8.2.3
+
+# Optional: Google AI Studio judge / mock target
+# google-genai>=1.0.0
+
+# Optional: PDF report generator (jormungandr/reporting/pdf_generator.py)
+# reportlab>=4.0.0

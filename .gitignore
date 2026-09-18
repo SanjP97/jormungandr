@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+.pytest_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+phare/
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Runtime output
+logs/
+results/
+
+# Secrets — real configs must never be committed.
+# Keep your working configs as config/*.local.yml
+config/*.local.yml
+config/*.local.yaml
+.env
+.env.*
